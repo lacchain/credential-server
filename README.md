@@ -6,6 +6,8 @@ When the previous is leveraged, and the subject is in control of their credentia
 
 The Credential Provider Server signs a credential using its own keys, which it is configurable. It manages its own repository of credentials, which by default is a smart contract that is deployed when server inits. The Credentials are verifiable against the smart contract deployed in the blockchain by default, but you can configure and choose your proof and revocation list service.
 
+The [Hashing Service](https://github.com/lacchain/hashing-service) and the Credential Service are being used for the notarizing tool named [LACChain Notarizer](http://notarizer.lacchain.net/), that you can use to register and verify the hash any file in the LACChain Blockchain Network for free. For any questions about the tool, you can also read the [LACChain Notarizer FAQ](https://medium.com/@lacchain.official/lacchain-notarizer-faq-6ae3dbb3441e).
+
 ## Prerequisites
 
 * Go 1.12+ installation or later

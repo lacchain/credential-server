@@ -1,4 +1,4 @@
-# Credential Mother
+# Credential Server
 
 This is a Provider Credential Server that validates, signs, generates, revokes and updates credential to identify persons, institutions and objects.
 

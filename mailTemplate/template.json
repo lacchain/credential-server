@@ -1,0 +1,8 @@
+{
+    "Template": {
+      "TemplateName": "CourseTemplate",
+      "SubjectPart": "Bienvenido, {{name}} al curso de Blockchain!",
+      "HtmlPart": "<h1>Itama Cursos</h1><p>Tu credencial fue registrada en la Blockchain <a href='https://ropsten.etherscan.io/tx/0x1860823efe27a0be0bb48375db3c0c94ab9e8435d836113eb3481b7586a3180f'>Ethereum Block Explorer</a>.</p>",
+      "TextPart": "{{name}},\r\neste email contiene tu Credential de acceso al curso de Blockchain, se te solicitará el JSON adjunto, por favor no lo borres o pierdas."
+    }
+  }

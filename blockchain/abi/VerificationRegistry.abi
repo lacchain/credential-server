@@ -1,0 +1,110 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "hash",
+				"type": "bytes32"
+			},
+			{
+				"name": "validDays",
+				"type": "uint256"
+			}
+		],
+		"name": "verify",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "verifications",
+		"outputs": [
+			{
+				"name": "iat",
+				"type": "uint256"
+			},
+			{
+				"name": "exp",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "hash",
+				"type": "bytes32"
+			}
+		],
+		"name": "revoke",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "hash",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"name": "by",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "date",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "expDate",
+				"type": "uint256"
+			}
+		],
+		"name": "Verified",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "hash",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"name": "by",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "date",
+				"type": "uint256"
+			}
+		],
+		"name": "Revoked",
+		"type": "event"
+	}
+]

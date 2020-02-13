@@ -1,0 +1,522 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a Provider Credential Server that validates, signs, generates, revokes and updates credential to identify persons, institutions and objects.\n\nThe Provider Credential Server sign a credential using its own keys, it is configurable.\n\nThe Provider Credential needs to manage its own repository of credentials, default is smart contract that is deployed when server init.\n\nThe Credentials are verifiable against blockchain default, but you can configure and choose your proof and revocation list service.",
+    "version": "0.0.1",
+    "title": "Credential Provider",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "adriancc5.5@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/v1",
+  "tags": [
+    {
+      "name": "credential",
+      "description": "Operations about credential",
+      "externalDocs": {
+        "description": "Find out more about verifiable credential",
+        "url": "https://w3c.github.io/vc-data-model/"
+      }
+    },
+    {
+      "name": "did",
+      "description": "Operations about DID",
+      "externalDocs": {
+        "description": "Find out more about DIDs",
+        "url": "https://w3c-ccg.github.io/did-spec/"
+      }
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/credential": {
+      "post": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "Create Credential",
+        "description": "This service is responsible for generating verifiable credentials, storing the credential hash in the blockchain. You send the credential data with type of credential, range of valid dates and evidence generated about credential as optional",
+        "operationId": "createCredential",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created credential object",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CredentialSubject"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Credential"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CredentialSubject"
+              }
+            }
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
+    "/credential/{credentialId}": {
+      "get": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "Get a Credential by ID",
+        "description": "This service returns a credential verifiable",
+        "operationId": "getCredentialById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "credentialId",
+            "type": "string",
+            "description": "the credential id that needs be returned.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Credential"
+            }
+          },
+          "400": {
+            "description": "Invalid credential Id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "Revoke a credential",
+        "description": "This service revokes a credential in the credential revocation list(Blockchain) providing a credential Id",
+        "operationId": "revokeCredential",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "credentialId",
+            "description": "Credential ID to revoke",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid ID credential supplied"
+          },
+          "404": {
+            "description": "credential not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "Renewal a credential",
+        "description": "This service updates a verifiable credential. First revoke the old credential with credential id, after generates a new credential with updated data from credential subject",
+        "operationId": "renewalCredential",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "credentialId",
+            "description": "Credential ID to update credential",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The data credential that needs be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CredentialSubject"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Credential"
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied"
+          },
+          "404": {
+            "description": "Credential ID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
+    "/credential/verify": {
+      "post": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "Verify a credential",
+        "description": "This service verify into blockchain if the credentials are current and these were not revoked",
+        "operationId": "verifyCredential",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "the credentials that needs be validated.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CredentialData"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VerifyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied"
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
+    "/did/{did}": {
+      "get": {
+        "tags": [
+          "did"
+        ],
+        "summary": "Validate a DID",
+        "description": "This service validates through JWT if a DID is valid. The JWT contains a did of a person, institution or object that needs be validated. The owner of did sign the payload with its private key",
+        "operationId": "validateDid",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "did",
+            "description": "The did that needs be validated. Use JWT. Example: eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJkaWQ6ZXY6MnVpMVhQUmthOEV4d21GOG9KaFE2cVpicXMxWEdBUTJ5dUYiLCJpc3MiOiJmYWQ2Mjg0OGYxYTZjZGU0YzRkOTQ1M2RhZGVhNzE0Y2JkNTlmMTI4MjA4Nzg1M2RlOGIwYzYwNzJiZWMyN2U3YzZkOTExOWViMTY5YjQ0NDAzZTgzYjVlODdmOThjNzJiMDFjMmQ0NjQyMDA2YjE1NDZiMDA0MGFhNGUwNTU0ZiIsImlhdCI6MTU0OTMwNzMzMCwiZXhwIjoxNTQ5NDg3MzMwfQ.f2PJRQeb4BY-LiRZm_DnJw1aS2Anu5AAav6Wuq6ZbddgvMFg35tEbTm2vCVlRN-sjQ_Ffsce3ZfrBS2tqlSM9w",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "Invalid did supplied"
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "VerifyResponse": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean",
+          "description": "Credentials are validated"
+        },
+        "error": {
+          "description": "Error code and message ocurred",
+          "$ref": "#/definitions/Error"
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Internal error code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Internal error message"
+        }
+      }
+    },
+    "Proof": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Sign Algorithm",
+          "enum": [
+            "SmartContract",
+            "RSASignature",
+            "Secp256k1",
+            "Secp256r1"
+          ]
+        },
+        "created": {
+          "type": "string",
+          "description": "The date of the digital signature with format YYYY-MM-DDTHH:MM:SSZ",
+          "format": "date-time"
+        },
+        "verificationMethod": {
+          "type": "string",
+          "description": "The method to proof if a credential is valid. The methods can include smart contracts, public keys"
+        },
+        "signatureValue": {
+          "type": "string",
+          "description": "the digital signature of credential provider"
+        }
+      },
+      "xml": {
+        "name": "Proof"
+      }
+    },
+    "CredentialSubject": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Credential Type"
+        },
+        "issuanceDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "credential issuance date"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "credential expiration date"
+        },
+        "content": {
+          "description": "The claims that will be generated with the credential"
+        },
+        "evidence": {
+          "description": "The evidence obtained from the validation of the claims, may be photos, physical documents, links, etc"
+        }
+      },
+      "example": {
+        "type": "DNI",
+        "issuanceDate": "2019-01-01T19:23:24Z",
+        "expirationDate": "2022-01-01T19:23:24Z",
+        "content": {
+          "name": "Jose",
+          "lastname": "Perez",
+          "birthDate": "1990-01-01"
+        },
+        "evidence": {
+          "photoFrontDNI": "3c9f6UAYaIJsXUJDIM7lb2+tTW1ukkhnhwzDnC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8duzT6dIY9zHoSSB1/L2oMmrs//9k=",
+          "photoBackDNI": "DnC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8dunC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8duzT6dIY9zHoSSB1/L2oMmrs/w4l=",
+          "face": "W8duzeDnC9h9Ksx2UtndRT6dIY9zHoSSB1/L2oMmrs//7k="
+        }
+      }
+    },
+    "Credential": {
+      "type": "object",
+      "properties": {
+        "credentialData": {
+          "$ref": "#/definitions/CredentialData"
+        },
+        "metadata": {
+          "$ref": "#/definitions/CredentialMetadata"
+        }
+      },
+      "xml": {
+        "name": "Credential"
+      }
+    },
+    "CredentialMetadata": {
+      "type": "object",
+      "properties": {
+        "blockNumber": {
+          "type": "string",
+          "description": "The block number where the transaction was inserted"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The dateTime when the block was generated YYYY-MM-DDTHH:MM:SSZ"
+        },
+        "transaction": {
+          "type": "string",
+          "description": "The transaction hash"
+        }
+      },
+      "xml": {
+        "name": "CredentialMetadata"
+      }
+    },
+    "CredentialData": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "credentialSubject",
+        "proof"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The credential ID generated by the Provider Credential"
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The types of this credential"
+        },
+        "issuer": {
+          "type": "string",
+          "description": "The DID or identity of Provider Credential"
+        },
+        "issuanceDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "credential issuance date"
+        },
+        "credentialSubject": {
+          "description": "The claims about a DID or identity that will be signed by Credential Provider"
+        },
+        "evidence": {
+          "description": "The evidence obtained from the validation of the claims, may be photos, physical documents, links, etc"
+        },
+        "proof": {
+          "$ref": "#/definitions/Proof"
+        }
+      },
+      "example": {
+        "id": "http://example.edu/credentials/3732",
+        "type": [
+          "VerifiableCredential",
+          "UniversityDegreeCredential"
+        ],
+        "issuer": "did:ev:MIN12345",
+        "issuanceDate": "2010-01-01T19:23:24Z",
+        "expirationDate": "2020-01-01T19:23:24Z",
+        "credentialSubject": {
+          "name": "Jose",
+          "lastname": "Perez",
+          "birthDate": "1990-01-01"
+        },
+        "evidence": {
+          "photoFrontDNI": "3c9f6UAYaIJsXUJDIM7lb2+tTW1ukkhnhwzDnC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8duzT6dIY9zHoSSB1/L2oMmrs//9k=",
+          "photoBackDNI": "DnC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8dunC9h9Ksx2UtndRxAhoTyxPPGM/rWfcW8duzT6dIY9zHoSSB1/L2oMmrs/w4l=",
+          "face": "W8duzeDnC9h9Ksx2UtndRT6dIY9zHoSSB1/L2oMmrs//7k="
+        },
+        "proof": {
+          "type": "Secp256k1",
+          "created": "2018-06-18T21:19:10Z",
+          "verificationMethod": "a12345df12ba123abcdf1298765f",
+          "signatureValue": "BavEll0/I1zpYw8XNi1bgVg/sCneO4Jugez8RwDg/+MCRVpjOboDoe4SxxKjkCOvKiCHGDvc4krqi6Z1n0UfqzxGfmatCuFibcC1wpsPRdW+gGsutPTLzvueMWmFhwYmfIFpbBu95t501+rSLHIEuujM/+PXr9Cky6Ed+W3JT24="
+        }
+      },
+      "xml": {
+        "name": "CredentialData"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

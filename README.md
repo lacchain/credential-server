@@ -1,12 +1,10 @@
 # Credential Server
 
-This is a Provider Credential Server that validates, signs, generates, revokes and updates credential to identify persons, institutions and objects.
+This is a Credential Provider Server that can generate, sign, validate, update, and revoke credentials. The credentials follow the standard [Verifiable Credentials (VC) by the W3C](https://www.w3.org/TR/vc-data-model/). Credentials can be used to contain information about anything. Also, they can be signed by the issuer, and refer to a subject. Therefore, if the issuer is trusted by a third party, this third party can trust information about the subject by verifying the validity of the credential, whithout having to ask the issuer. 
 
-The Provider Credential Server sign a credential using its own keys, it is configurable.
+When the previous is leveraged, and the subject is in control of their credentials, we can build identity models that fall into the category of self-sovereign identity (SSI). LACChain is developing a techno-legal framework for SSI.
 
-The Provider Credential needs to manage its own repository of credentials, default is smart contract that is deployed when server init.
-
-The Credentials are verifiable against blockchain default, but you can configure and choose your proof and revocation list service.
+The Credential Provider Server signs a credential using its own keys, which it is configurable. It manages its own repository of credentials, which by default is a smart contract that is deployed when server inits. The Credentials are verifiable against the smart contract deployed in the blockchain by default, but you can configure and choose your proof and revocation list service.
 
 ## Prerequisites
 

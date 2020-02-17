@@ -55,6 +55,13 @@ func configureAPI(api *operations.CredentialProviderAPI, config *ServerConfig) h
 		}
 		return credential.NewRenewalCredentialOK().WithPayload(response)
 	})
+	api.CredentialSendCredentialHandler = credential.SendCredentialHandlerFunc(func(params credential.SendCredentialParams) middleware.Responder {
+		response, err := business.SendCredential(params.Body, config.Node, config.Address, config.Proof.Verification)
+		if err != nil {
+			return credential.NewSendCredentialBadRequest()
+		}
+		return credential.NewSendCredentialOK().WithPayload(response)
+	})
 	api.DidValidateDidHandler = did.ValidateDidHandlerFunc(func(params did.ValidateDidParams) middleware.Responder {
 		validate, err := business.ValidateDid(params.Did)
 		if !validate || err != nil {

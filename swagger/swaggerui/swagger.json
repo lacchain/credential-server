@@ -275,6 +275,55 @@
         }
       }
     },
+    "/credential/send": {
+      "post": {
+        "tags": [
+          "credential"
+        ],
+        "summary": "send a credential",
+        "description": "This service verify the credential exist into blockchain and send the credential by email",
+        "operationId": "sendCredential",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "the credentials that needs be sent.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Credential"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VerifyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied"
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
     "/did/{did}": {
       "get": {
         "tags": [

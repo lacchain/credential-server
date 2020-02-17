@@ -97,6 +97,55 @@ func init() {
         }
       }
     },
+    "/credential/send": {
+      "post": {
+        "description": "This service verify the credential exist into blockchain and send the credential by email",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "tags": [
+          "credential"
+        ],
+        "summary": "send a credential",
+        "operationId": "sendCredential",
+        "parameters": [
+          {
+            "description": "the credentials that needs be sent.",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Credential"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VerifyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied"
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
     "/credential/verify": {
       "post": {
         "description": "This service verify into blockchain if the credentials are current and these were not revoked",
@@ -609,6 +658,55 @@ func init() {
                 "$ref": "#/definitions/CredentialSubject"
               }
             }
+          },
+          "404": {
+            "description": "DID not found"
+          },
+          "500": {
+            "description": "Error Internal Server"
+          }
+        }
+      }
+    },
+    "/credential/send": {
+      "post": {
+        "description": "This service verify the credential exist into blockchain and send the credential by email",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "tags": [
+          "credential"
+        ],
+        "summary": "send a credential",
+        "operationId": "sendCredential",
+        "parameters": [
+          {
+            "description": "the credentials that needs be sent.",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Credential"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VerifyResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid credential supplied"
           },
           "404": {
             "description": "DID not found"

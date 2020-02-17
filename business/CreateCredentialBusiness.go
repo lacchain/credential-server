@@ -127,7 +127,7 @@ func CreateCredential(subjects []*models.CredentialSubject, nodeURL string, issu
 
 		credential.Metadata = credentialMetadata
 
-		qrFile, err := generateQR("http://credentialserver.iadb.org/", credentialHash, getNameSubject(subject.Content))
+		/*qrFile, err := generateQR("http://credentialserver.iadb.org/", credentialHash, getNameSubject(subject.Content))
 		if err != nil {
 			fmt.Printf("Failed generate QR: %s", err)
 		}
@@ -135,7 +135,7 @@ func CreateCredential(subjects []*models.CredentialSubject, nodeURL string, issu
 		err = sendCredentialByEmail(getNameSubject(subject.Content), subject.Email, []byte(string(rawCredential)), tx.Hex(),blockNumber,timestamp, subject.ExpirationDate.String(), qrFile)
 		if err != nil {
 			fmt.Printf("Failed to send email: %s", err)
-		}
+		}*/
 
 		//Deprecated code to save credential into blockchain
 
@@ -219,7 +219,7 @@ func sendCredentialByEmail(name string, destination string, credential []byte, t
 
 	err1 := smtp.SendMail(servername, auth, "notarization@lacchain.net", recipients, []byte(message))
 	if err1 != nil {
-		log.Println("Error:",err1)
+		fmt.Println("Error:",err1)
 	}
 
 	log.Print("Your mail was sent")
@@ -270,4 +270,11 @@ func getFullURL(contentSubject interface{}) string {
 	fullURL := content["full_size_url"]
 
 	return fmt.Sprintf("%v", fullURL)
+}
+
+func getExpirationDate(contentSubject interface{}) string {
+	content := contentSubject.(map[string]interface{})
+	name := content["expirationDate"]
+
+	return fmt.Sprintf("%v", name)
 }

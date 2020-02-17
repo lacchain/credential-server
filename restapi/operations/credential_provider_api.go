@@ -54,6 +54,9 @@ func NewCredentialProviderAPI(spec *loads.Document) *CredentialProviderAPI {
 		CredentialRevokeCredentialHandler: credential.RevokeCredentialHandlerFunc(func(params credential.RevokeCredentialParams) middleware.Responder {
 			return middleware.NotImplemented("operation CredentialRevokeCredential has not yet been implemented")
 		}),
+		CredentialSendCredentialHandler: credential.SendCredentialHandlerFunc(func(params credential.SendCredentialParams) middleware.Responder {
+			return middleware.NotImplemented("operation CredentialSendCredential has not yet been implemented")
+		}),
 		DidValidateDidHandler: did.ValidateDidHandlerFunc(func(params did.ValidateDidParams) middleware.Responder {
 			return middleware.NotImplemented("operation DidValidateDid has not yet been implemented")
 		}),
@@ -109,6 +112,8 @@ type CredentialProviderAPI struct {
 	CredentialRenewalCredentialHandler credential.RenewalCredentialHandler
 	// CredentialRevokeCredentialHandler sets the operation handler for the revoke credential operation
 	CredentialRevokeCredentialHandler credential.RevokeCredentialHandler
+	// CredentialSendCredentialHandler sets the operation handler for the send credential operation
+	CredentialSendCredentialHandler credential.SendCredentialHandler
 	// DidValidateDidHandler sets the operation handler for the validate did operation
 	DidValidateDidHandler did.ValidateDidHandler
 	// CredentialVerifyCredentialHandler sets the operation handler for the verify credential operation
@@ -198,6 +203,10 @@ func (o *CredentialProviderAPI) Validate() error {
 
 	if o.CredentialRevokeCredentialHandler == nil {
 		unregistered = append(unregistered, "credential.RevokeCredentialHandler")
+	}
+
+	if o.CredentialSendCredentialHandler == nil {
+		unregistered = append(unregistered, "credential.SendCredentialHandler")
 	}
 
 	if o.DidValidateDidHandler == nil {
@@ -331,6 +340,11 @@ func (o *CredentialProviderAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/credential/{credentialId}"] = credential.NewRevokeCredential(o.context, o.CredentialRevokeCredentialHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/credential/send"] = credential.NewSendCredential(o.context, o.CredentialSendCredentialHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

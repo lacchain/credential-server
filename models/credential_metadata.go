@@ -23,6 +23,9 @@ type CredentialMetadata struct {
 
 	// The transaction hash
 	Transaction string `json:"transaction,omitempty"`
+
+	// mail of contact
+	Email string `json:"email,omitempty"`
 }
 
 // Validate validates this credential metadata

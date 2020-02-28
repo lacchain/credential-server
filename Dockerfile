@@ -20,4 +20,4 @@ COPY --from=builder go/credential-server/cmd/credential-provider-server/server.k
 COPY --from=builder go/credential-server/swagger/ /CredentialMother/
 
 EXPOSE 8000 8001
-CMD ["sh","-c","credential-provider-server start --host=0.0.0.0 --tlscertificate=/usr/local/bin/server.crt --tlskey=/usr/local/bin/server.key --port 8000 --secret Password."]
+CMD ["sh","-c","credential-provider-server start --host=0.0.0.0 --tlscertificate=/CredentialMother/server.crt --tlskey=/CredentialMother/server.key --port 8001 --tlsport 8000 --secret Password."]

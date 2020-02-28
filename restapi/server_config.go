@@ -19,13 +19,17 @@ type ServerConfig struct {
 	// Keystore Secret
 	Secret string `def:"Password." opt:"x" help:"Keystore Secret"`
 	// Listening port for the server
-	Port int `def:"8000" opt:"p" help:"Listening port of credential-provider-server"`
+	Port int `def:"8001" opt:"p" help:"Listening port of credential-provider-server"`
+	// Listening https port for the server
+	TLSPort int `def:"8000" opt:"P" help:"Listening https port of credential-provider-server"`
 	// Certificate to listen on TLS
 	TLSCertificate string `def:"server.crt" opt:"s" help:"Certificate to listen on TLS"`
 	// Certificate to listen on TLS
 	TLSKey string `def:"server.key" opt:"t" help:"Certificate Private Key"`
 	// Bind address for the server
 	Host string `def:"0.0.0.0" help:"Listening address of credential-provider-server"`
+	// Bind address TLS for the server
+	TLSHost string `def:"0.0.0.0" help:"Listening address of TLS credential-provider-server"`
 	// Enables debug logging
 	Debug bool `def:"false" opt:"d" help:"Enable debug level logging" hide:"true"`
 	// Sets the logging level on the server
